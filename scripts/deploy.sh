@@ -28,12 +28,17 @@ else
   terraform workspace select "$ENVIRONMENT"
 fi
 
+# Terraform expects TF_VAR_openrouter_api_key; CI often sets OPENROUTER_API_KEY only.
+if [ -n "${OPENROUTER_API_KEY:-}" ] && [ -z "${TF_VAR_openrouter_api_key:-}" ]; then
+  export TF_VAR_openrouter_api_key="$OPENROUTER_API_KEY"
+fi
+
 SECRET_VAR_FILE=()
 if [ -f secrets.tfvars ]; then
   SECRET_VAR_FILE=(-var-file=secrets.tfvars)
 fi
 if [ -z "${TF_VAR_openrouter_api_key:-}" ] && [ "${#SECRET_VAR_FILE[@]}" -eq 0 ]; then
-  echo "Missing OpenRouter credentials: export TF_VAR_openrouter_api_key=... or create terraform/secrets.tfvars"
+  echo "Missing OpenRouter credentials: set TF_VAR_openrouter_api_key or OPENROUTER_API_KEY, or create terraform/secrets.tfvars"
   exit 1
 fi
 

@@ -16,11 +16,10 @@ variable "environment" {
   }
 }
 
-# Change later to openrouter
-variable "bedrock_model_id" {
-  description = "Bedrock model ID"
+variable "openrouter_api_key" {
+  description = "OpenRouter API key"
   type        = string
-  default     = "amazon.nova-micro-v1:0"
+  sensitive   = true
 }
 
 variable "lambda_timeout" {

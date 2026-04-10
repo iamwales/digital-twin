@@ -42,6 +42,10 @@ fi
 # Select the workspace
 terraform workspace select "$ENVIRONMENT"
 
+if [ -n "${OPENROUTER_API_KEY:-}" ] && [ -z "${TF_VAR_openrouter_api_key:-}" ]; then
+  export TF_VAR_openrouter_api_key="$OPENROUTER_API_KEY"
+fi
+
 echo "📦 Emptying S3 buckets..."
 
 # Get bucket names with account ID (matching Day 4 naming)
